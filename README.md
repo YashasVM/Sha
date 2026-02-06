@@ -1,4 +1,4 @@
-# Shata - P2P File Transfer
+# Sha. - P2P File Transfer
 
 P2P file transfer. No servers. No bull.
 
