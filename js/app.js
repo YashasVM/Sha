@@ -104,7 +104,15 @@
 
     // Auto-uppercase input
     codeInput.addEventListener('input', (e) => {
-        e.target.value = e.target.value.toUpperCase();
+        e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    });
+
+    // Handle paste
+    codeInput.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const pasted = (e.clipboardData || window.clipboardData).getData('text');
+        const cleaned = pasted.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
+        e.target.value = cleaned;
     });
 
     // Receive another

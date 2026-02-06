@@ -28,7 +28,8 @@ body {
 
 .container {
     width: 100%;
-    max-width: 440px;
+    max-width: 520px;
+    min-width: 280px;
 }
 
 header {
@@ -406,23 +407,74 @@ header h1 {
 }
 
 /* Responsive */
-@media (max-width: 480px) {
+@media (max-width: 600px) {
+    body {
+        padding: 16px;
+    }
+
     header h1 {
-        font-size: 3.5rem;
+        font-size: 3rem;
+    }
+
+    .tagline {
+        font-size: 0.8rem;
+    }
+
+    .drop-zone {
+        padding: 40px 16px;
+    }
+
+    .code-display {
+        padding: 12px 16px;
+    }
+
+    #share-code {
+        font-size: 1.4rem;
+        letter-spacing: 4px;
     }
 
     .code-input-wrapper {
         flex-direction: column;
         align-items: center;
+        gap: 16px;
     }
 
     #code-input {
         width: 100%;
-        max-width: 200px;
+        max-width: 220px;
+        font-size: 1.2rem;
+        letter-spacing: 4px;
+    }
+
+    .primary-btn {
+        width: 100%;
+        max-width: 220px;
     }
 
     .progress-stats {
         flex-wrap: wrap;
         gap: 8px;
+        justify-content: center;
+    }
+
+    .file-details {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+
+    .file-name {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 360px) {
+    header h1 {
+        font-size: 2.5rem;
+    }
+
+    .mode-btn {
+        padding: 10px;
+        font-size: 0.85rem;
     }
 }
