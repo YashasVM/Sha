@@ -1,7 +1,7 @@
 // Sender functionality
 const Sender = (function() {
     // Code generation characters (excludes confusing chars: 0,O,I,l,1)
-    const CHARS = 'QWERTY';
+    const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
     const CODE_LENGTH = 6;
     const CHUNK_SIZE = 64 * 1024; // 64KB chunks
 
