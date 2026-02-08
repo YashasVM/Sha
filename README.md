@@ -1,5 +1,7 @@
 # Sha. - P2P File Transfer
 
+Sha. Share. Host. Access.
+
 P2P file transfer. No servers. No bullshit.
 
 ## Features
