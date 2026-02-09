@@ -4,6 +4,10 @@ Sha. Share. Host. Access.
 
 P2P file transfer. No servers. No bullshit.
 
+## Use it here:
+[Click here.
+](https://sha.yashasvm.workers.dev/)
+
 ## Features
 
 - **Direct P2P Transfer**: Files are transferred directly between browsers using WebRTC
