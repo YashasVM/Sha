@@ -25,17 +25,21 @@
         <!-- Sender View -->
         <div id="sender-view" class="view active">
             <div id="drop-zone" class="drop-zone">
-                <input type="file" id="file-input" hidden>
+                <input type="file" id="file-input" multiple hidden>
                 <div class="drop-zone-content">
                     <span class="drop-icon">+</span>
-                    <p>Drop file here or <button id="select-file-btn" class="link-btn">browse</button></p>
+                    <p>Drop files here or <button id="select-file-btn" class="link-btn">browse</button></p>
+                    <span class="drop-zone-hint">Send one file or a full batch in a single transfer.</span>
                 </div>
             </div>
 
             <div id="sender-file-info" class="file-info hidden">
                 <div class="file-details">
-                    <span class="file-name"></span>
-                    <span class="file-size"></span>
+                    <div class="file-header">
+                        <span class="file-name"></span>
+                        <span class="file-size"></span>
+                    </div>
+                    <span class="file-subtext"></span>
                 </div>
             </div>
 
@@ -66,7 +70,7 @@
 
             <div id="sender-complete" class="complete-section hidden">
                 <span class="complete-icon">&#10003;</span>
-                <p>Transfer complete</p>
+                <p id="sender-complete-message">Transfer complete</p>
                 <button id="send-another-btn" class="primary-btn">Send another</button>
             </div>
 
@@ -102,8 +106,11 @@
 
             <div id="receiver-file-info" class="file-info hidden">
                 <div class="file-details">
-                    <span class="file-name"></span>
-                    <span class="file-size"></span>
+                    <div class="file-header">
+                        <span class="file-name"></span>
+                        <span class="file-size"></span>
+                    </div>
+                    <span class="file-subtext"></span>
                 </div>
             </div>
 
@@ -120,7 +127,7 @@
 
             <div id="receiver-complete" class="complete-section hidden">
                 <span class="complete-icon">&#10003;</span>
-                <p>Download complete</p>
+                <p id="receiver-complete-message">Download complete</p>
                 <button id="receive-another-btn" class="primary-btn">Receive another</button>
             </div>
 

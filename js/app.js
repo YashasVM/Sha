@@ -55,7 +55,7 @@
 
     fileInput.addEventListener('change', (e) => {
         if (e.target.files.length > 0) {
-            Sender.init(e.target.files[0]);
+            Sender.init(Array.from(e.target.files));
         }
     });
 
@@ -74,7 +74,7 @@
         dropZone.classList.remove('drag-over');
 
         if (e.dataTransfer.files.length > 0) {
-            Sender.init(e.dataTransfer.files[0]);
+            Sender.init(Array.from(e.dataTransfer.files));
         }
     });
 
