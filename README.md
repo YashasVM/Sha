@@ -1,90 +1,99 @@
-# cd - P2P File Transfer
+# Sha. - P2P File Transfer
 
-cd is a direct browser-to-browser file sharing app with a loud, fast workbench UI. It uses WebRTC for encrypted P2P transfer, PeerJS for connection signaling, and friendly share codes, links, and QR handoff for quick joining.
+Sha. Share. Host. Access.
+
+P2P file transfer. No servers. No bullshit.
+
+## Use it here:
+[Click here.
+](https://sha.yashasvm.workers.dev/)
 
 ## Features
 
-- Direct P2P transfer with no server-side file storage
-- Multi-file batches in one session
-- Friendly receive codes with a random suffix for safer joining
-- Share links using codes like `?receive=spark9x2k`
-- Sender QR generation for join links
-- Receiver QR scanning from camera with manual code fallback
-- Binary chunk transfer with data-channel backpressure
-- Browser file streaming where supported, Blob downloads elsewhere
-- Brutalist two-column desktop workflow and stacked mobile workflow
+- **Direct P2P Transfer**: Files are transferred directly between browsers using WebRTC
+- **Multi-File Batches**: Send one file or multiple files in a single session
+- **No Server Storage**: Your files never touch our servers
+- **Simple Code Sharing**: 6-character alphanumeric codes for easy sharing
+- **Progress Tracking**: Real-time progress bar with transfer speed
+- **No Login Required**: Just open and share
 
 ## How It Works
 
 ### Sender
-
-1. Open cd.
-2. Choose or drop one or more files.
-3. Share the code, copy the join link, or show the QR code.
-4. Keep the tab open until the receiver connects.
-5. Transfer starts automatically.
+1. Open the website
+2. Select or drag & drop one or more files
+3. Share the 6-character code with the receiver
+4. Wait for the receiver to connect
+5. Transfer happens automatically
 
 ### Receiver
-
-1. Open cd and switch to Receive, or open a `?receive=spark9x2k` link.
-2. Enter the code manually or scan the sender QR.
-3. Connect to the sender.
-4. Save streamed files when prompted, or download through the Blob fallback.
+1. Open the website
+2. Switch to "Receive" mode
+3. Enter the 6-character code
+4. Click "Connect"
+5. Files download automatically as each transfer completes
 
 ## Tech Stack
 
-- Vite vanilla JavaScript app with ES modules
-- [`peerjs@1.5.5`](https://peerjs.com/) for WebRTC signaling
-- [`qrcode@1.5.4`](https://github.com/soldair/node-qrcode) for sender QR generation
-- [`html5-qrcode@2.3.8`](https://github.com/mebjas/html5-qrcode) for camera scanning
-- Cloudflare Pages/Workers static asset hosting
+- **Frontend**: Vanilla HTML/CSS/JavaScript
+- **P2P**: [PeerJS](https://peerjs.com/) for WebRTC signaling
+- **Hosting**: Cloudflare Pages
 
 ## Local Development
 
-```bash
-npm install
-npm run dev
-```
-
-## Build
+Simply open `index.html` in a browser, or serve with any static file server:
 
 ```bash
-npm run build
-npm run audit
+# Using Python
+python -m http.server 8000
+
+# Using Node.js
+npx serve
 ```
 
-Cloudflare serves the built app from `dist/`, as configured in `wrangler.jsonc`.
+## Architecture
 
-## Safety Notes
+```
+┌─────────────────────────────────────────────────────────┐
+│                   Cloudflare Pages                       │
+│                   (Static Files)                         │
+└─────────────────────────────────────────────────────────┘
+                           │
+        ┌──────────────────┴──────────────────┐
+        ▼                                      ▼
+┌───────────────┐                      ┌───────────────┐
+│    SENDER     │                      │   RECEIVER    │
+│   Browser     │                      │   Browser     │
+│               │    PeerJS Cloud      │               │
+│  1. Select    │◄────(Signaling)─────►│  3. Enter     │
+│     file      │                      │     code      │
+│  2. Get code  │                      │               │
+│               │◄═══════════════════►│               │
+│               │   Direct WebRTC      │  4. Download  │
+│               │   (P2P Transfer)     │               │
+└───────────────┘                      └───────────────┘
+```
 
-- Files are transferred over WebRTC data channels between the sender and receiver browsers.
-- The app does not intentionally store file contents on the host server.
-- PeerJS signaling is used only to help browsers find each other and open the direct connection.
-- Anyone with the current share code can try to connect, so treat codes like temporary links.
-- Keep both tabs open until the transfer completes.
+## Performance Optimizations
+
+- **Binary ArrayBuffer transfers** (33% smaller than base64)
+- **Manifest + raw binary chunk streaming** to reduce per-message overhead
+- **Buffered data-channel backpressure** using `bufferedAmountLowThreshold`
+- **Throttled progress rendering** to keep the UI responsive during large transfers
 
 ## File Structure
 
-```text
-/
-|-- index.html
-|-- src/
-|   |-- main.js
-|   `-- style.css
-|-- favicon.svg
-|-- package.json
-|-- package-lock.json
-|-- wrangler.jsonc
-`-- README.md
 ```
-
-## Test Plan
-
-- Send one file and multiple files.
-- Receive by manual code, copied link, generated QR, and in-app QR scan.
-- Try invalid codes, unavailable sender, connection timeout, interrupted transfer, and camera permission failure.
-- Compare large-file transfer speed and receiver memory behavior before and after.
-- Run `npm run build`, `npm run audit`, and desktop/mobile visual QA.
+/
+├── index.html          # Main HTML
+├── css/
+│   └── style.css       # Styling
+├── js/
+│   ├── app.js          # Main app logic
+│   ├── sender.js       # Sender functionality
+│   └── receiver.js     # Receiver functionality
+└── README.md           # This file
+```
 
 ## License
 
@@ -92,4 +101,6 @@ MIT
 
 ---
 
-Made by [@Yashas.VM](https://github.com/YashasVM)
+## Contributors
+
+Made by [@Yashas.VM](https://github.com/YashasVM) | Co-Powered by Claude
