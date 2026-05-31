@@ -10,11 +10,9 @@
 [![Status](https://img.shields.io/badge/status-active-008f5a?style=flat-square&labelColor=111111)](https://github.com/YashasVM/Sha)
 [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square&labelColor=111111)](LICENSE)
 [![Stack](https://img.shields.io/badge/stack-Vite%20%2B%20WebRTC-f04435?style=flat-square&labelColor=111111)](https://vite.dev)
-[![Live](https://img.shields.io/badge/live-sha.yashasvm.workers.dev-f4ed28?style=flat-square&labelColor=111111)](https://sha.yashasvm.workers.dev/)
+[![Deploy](https://img.shields.io/badge/deploy-Cloudflare%20Workers-f4ed28?style=flat-square&labelColor=111111)](https://workers.cloudflare.com)
 
 **No login** . **No server-side file storage** . **Multi-file transfer** . **QR ready**
-
-[Open cd](https://sha.yashasvm.workers.dev/) . [Source Code](https://github.com/YashasVM/Sha) . [Report an Issue](https://github.com/YashasVM/Sha/issues)
 
 ---
 
