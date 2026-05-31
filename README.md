@@ -1,90 +1,176 @@
-# cd - P2P File Transfer
+<div align="center">
 
-cd is a direct browser-to-browser file sharing app with a loud, fast workbench UI. It uses WebRTC for encrypted P2P transfer, PeerJS for connection signaling, and friendly share codes, links, and QR handoff for quick joining.
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/badge/cd-Direct_Browser_to_Browser_File_Handoff-f4ed28?style=for-the-badge&labelColor=101010">
+  <img alt="cd banner" src="https://img.shields.io/badge/cd-Direct_Browser_to_Browser_File_Handoff-164bff?style=for-the-badge&labelColor=f2ecd7">
+</picture>
+
+### Send files straight between browsers with codes, links, and QR handoff.
+
+[![Status](https://img.shields.io/badge/status-active-008f5a?style=flat-square&labelColor=111111)](https://github.com/YashasVM/Sha)
+[![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square&labelColor=111111)](LICENSE)
+[![Stack](https://img.shields.io/badge/stack-Vite%20%2B%20WebRTC-f04435?style=flat-square&labelColor=111111)](https://vite.dev)
+[![Deploy](https://img.shields.io/badge/deploy-Cloudflare%20Workers-f4ed28?style=flat-square&labelColor=111111)](https://workers.cloudflare.com)
+
+**No login** . **No server-side file storage** . **Multi-file transfer** . **QR ready**
+
+---
+
+</div>
+
+> [!IMPORTANT]
+> cd is a browser-to-browser transfer app. File contents move over WebRTC data channels between peers, while PeerJS is used for connection signaling. Anyone with a live share code can try to connect, so treat codes like temporary private links.
+
+## What is cd?
+
+cd is a small, loud, direct file handoff tool. Pick files, get a friendly receive code, share the code or QR link, and keep both browser tabs open while the transfer runs.
+
+```text
+Sender Browser -> WebRTC Data Channel -> Receiver Browser
+       |                 ^
+       |                 |
+       +-- PeerJS signaling for connection setup
+```
+
+---
 
 ## Features
 
-- Direct P2P transfer with no server-side file storage
-- Multi-file batches in one session
-- Friendly receive codes with a random suffix for safer joining
-- Share links using codes like `?receive=spark9x2k`
-- Sender QR generation for join links
-- Receiver QR scanning from camera with manual code fallback
-- Binary chunk transfer with data-channel backpressure
-- Browser file streaming where supported, Blob downloads elsewhere
-- Brutalist two-column desktop workflow and stacked mobile workflow
+### Transfer Flow
 
-## How It Works
+| Feature | Details |
+|---|---|
+| **Direct P2P Transfer** | Files transfer between browsers over WebRTC data channels |
+| **No Server Storage** | The hosted app does not intentionally store transferred file contents |
+| **Multi-File Batches** | Send one file or many files in a single session |
+| **Friendly Codes** | Human-readable word plus random suffix, like `spark9x2k` |
+| **Share Links** | Receiver links support `?receive=spark9x2k` deep linking |
+| **QR Handoff** | Sender generates a QR code for quick phone-to-desktop or desktop-to-phone joining |
 
-### Sender
+### Browser Experience
 
-1. Open cd.
-2. Choose or drop one or more files.
-3. Share the code, copy the join link, or show the QR code.
-4. Keep the tab open until the receiver connects.
-5. Transfer starts automatically.
+| Feature | Details |
+|---|---|
+| **Drag and Drop** | Drop files directly on the sender workbench |
+| **Camera Scanner** | Receiver can scan the sender QR code from the browser |
+| **Manual Fallback** | Codes still work when camera access is blocked |
+| **Live Progress** | Transfer percentage, moved bytes, and current speed update during transfer |
+| **Backpressure Aware** | Data-channel buffering is throttled to keep large transfers steadier |
+| **Responsive UI** | Brutalist two-column desktop layout with a compact stacked mobile layout |
 
-### Receiver
+---
 
-1. Open cd and switch to Receive, or open a `?receive=spark9x2k` link.
-2. Enter the code manually or scan the sender QR.
-3. Connect to the sender.
-4. Save streamed files when prompted, or download through the Blob fallback.
+## Quick Start
 
-## Tech Stack
-
-- Vite vanilla JavaScript app with ES modules
-- [`peerjs@1.5.5`](https://peerjs.com/) for WebRTC signaling
-- [`qrcode@1.5.4`](https://github.com/soldair/node-qrcode) for sender QR generation
-- [`html5-qrcode@2.3.8`](https://github.com/mebjas/html5-qrcode) for camera scanning
-- Cloudflare Pages/Workers static asset hosting
-
-## Local Development
+### 1. Install
 
 ```bash
 npm install
+```
+
+### 2. Run Locally
+
+```bash
 npm run dev
 ```
 
-## Build
+Open the local Vite URL in two browser windows or on two devices on the same network.
+
+### 3. Send
+
+1. Choose or drop one or more files.
+2. Share the generated code, copy the join link, or show the QR code.
+3. Keep the sender tab open until the receiver connects.
+
+### 4. Receive
+
+1. Switch to **Receive**, open a `?receive=spark9x2k` link, or scan the QR code.
+2. Connect with the code.
+3. Save streamed files when prompted, or let the browser download Blob fallbacks.
+
+> [!TIP]
+> For the smoothest transfer, keep both tabs active, avoid VPNs that block peer connections, and test on the same Wi-Fi network first.
+
+---
+
+## Architecture
+
+```text
++-------------------+        PeerJS signaling        +-------------------+
+|   Sender Browser  | <----------------------------> | Receiver Browser |
+|                   |                                |                  |
+| File picker/drop  |                                | Code/QR scanner  |
+| Manifest builder  |                                | Manifest reader  |
+| Stream reader     |                                | Save/download    |
++---------+---------+                                +---------+--------+
+          |                                                    ^
+          |              WebRTC data channel                   |
+          +----------------------------------------------------+
+                         Raw binary chunks
+```
+
+### Runtime Defaults
+
+| Parameter | Value |
+|---|---|
+| App Runtime | Vite vanilla JavaScript with ES modules |
+| Signaling | `peerjs@1.5.5` |
+| QR Generation | `qrcode@1.5.4` |
+| QR Scanning | `html5-qrcode@2.3.8` |
+| Hosting Target | Cloudflare static assets from `dist/` |
+| Code Format | Curated word plus 5-character random base36 suffix |
+| Buffer Guard | Data channel pauses above `8 MB` buffered |
+
+---
+
+## Repository Layout
+
+```text
+/
+|-- index.html              App shell and accessible transfer views
+|-- src/
+|   |-- main.js             Sender, receiver, WebRTC, QR, and transfer logic
+|   `-- style.css           Brutalist responsive interface
+|-- favicon.svg             App icon
+|-- package.json            Scripts and dependencies
+|-- package-lock.json       Locked dependency graph
+|-- wrangler.jsonc          Cloudflare static asset config
+`-- README.md               Project documentation
+```
+
+---
+
+## Build and Checks
 
 ```bash
 npm run build
 npm run audit
 ```
 
-Cloudflare serves the built app from `dist/`, as configured in `wrangler.jsonc`.
+Cloudflare serves the production build from `dist/`, as configured in `wrangler.jsonc`.
+
+---
 
 ## Safety Notes
 
-- Files are transferred over WebRTC data channels between the sender and receiver browsers.
-- The app does not intentionally store file contents on the host server.
-- PeerJS signaling is used only to help browsers find each other and open the direct connection.
-- Anyone with the current share code can try to connect, so treat codes like temporary links.
-- Keep both tabs open until the transfer completes.
+- File contents are sent over WebRTC data channels between connected browsers.
+- The hosted app serves static assets and does not intentionally store transferred files.
+- PeerJS signaling helps establish the connection, but it is not a file storage layer.
+- Share codes are temporary secrets. Send them only to the intended receiver.
+- The sender should keep the tab open until the transfer completes.
+- Browser support, NAT behavior, VPNs, and local network policies can affect peer connectivity.
 
-## File Structure
-
-```text
-/
-|-- index.html
-|-- src/
-|   |-- main.js
-|   `-- style.css
-|-- favicon.svg
-|-- package.json
-|-- package-lock.json
-|-- wrangler.jsonc
-`-- README.md
-```
+---
 
 ## Test Plan
 
 - Send one file and multiple files.
 - Receive by manual code, copied link, generated QR, and in-app QR scan.
 - Try invalid codes, unavailable sender, connection timeout, interrupted transfer, and camera permission failure.
-- Compare large-file transfer speed and receiver memory behavior before and after.
+- Compare large-file transfer speed and receiver memory behavior.
 - Run `npm run build`, `npm run audit`, and desktop/mobile visual QA.
+
+---
 
 ## License
 
@@ -92,4 +178,10 @@ MIT
 
 ---
 
-Made by [@Yashas.VM](https://github.com/YashasVM)
+<div align="center">
+
+**Made by [@yashas.vm](https://github.com/YashasVM)**
+
+*Move the file. Keep the drama in the UI.*
+
+</div>
